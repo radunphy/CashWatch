@@ -1,0 +1,27 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+navbar {
+    background-color: #12161d;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.bg-indigo {
+    background-color: #191377
+    
+}
