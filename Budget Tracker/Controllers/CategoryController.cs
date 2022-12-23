@@ -135,7 +135,7 @@ namespace CashWatch.Controllers
         {
             if (_context.Categories == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Categories' is null.");
             }
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
