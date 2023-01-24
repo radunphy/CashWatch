@@ -1,5 +1,4 @@
 ﻿using CashWatch.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,18 +50,18 @@ namespace CashWatch.Controllers
         public async Task<IActionResult> Create([Bind (
             "TransactionID, " +
             "CategoryID, " +
-            "Category, " +
             "Amount, " +
             "Note, " +
             "Date")] Transaction transaction)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(transaction);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(transaction);
             }
-            return View(transaction);
+            
+            _context.Add(transaction);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));      
         }
 
         // GET: TransactionController/Edit/5

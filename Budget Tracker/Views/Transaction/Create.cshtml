@@ -12,15 +12,17 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="btn-group" data-toggle="buttons">
-                <label asp-for="Category" class="btn btn-primary">
+            <div class="dropdown">
+                <label asp-for="Category" class="btn btn-primary dropdown-toggle">
                     <input asp-for="Category" type="radio" class="btn-check" name="options" id="option1" value="Expense"> Expense
                 </label>
-                <label asp-for="Category" class="btn btn-outline-secondary">
-                    <input asp-for="Category" type="radio" class="btn-check" name="options" id="option2" value="Income"> Income
-                </label>
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
+             </div> 
+            <!--
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <input asp-for="CategoryId" class="form-control" />
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div> -->
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
                 <input asp-for="Amount" class="form-control" />

@@ -9,30 +9,31 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Budget_Tracker.Migrations
+namespace CashWatch.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221221042357_Initial Create")]
-    partial class InitialCreate
+    [Migration("20230116183442_UpdateTypes")]
+    partial class UpdateTypes
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Budget_Tracker.Models.Category", b =>
+            modelBuilder.Entity("CashWatch.Models.Category", b =>
                 {
                     b.Property<int>("CategoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryID"));
 
-                    b.Property<string>("Icon")
+                    b.Property<string>("Frequency")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
@@ -49,13 +50,13 @@ namespace Budget_Tracker.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Budget_Tracker.Models.Transaction", b =>
+            modelBuilder.Entity("CashWatch.Models.Transaction", b =>
                 {
                     b.Property<int>("TransactionID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionID"));
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
@@ -67,7 +68,7 @@ namespace Budget_Tracker.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(75)");
 
                     b.HasKey("TransactionID");
 
@@ -76,9 +77,9 @@ namespace Budget_Tracker.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("Budget_Tracker.Models.Transaction", b =>
+            modelBuilder.Entity("CashWatch.Models.Transaction", b =>
                 {
-                    b.HasOne("Budget_Tracker.Models.Category", "Category")
+                    b.HasOne("CashWatch.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)

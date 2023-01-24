@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BudgetTracker.Migrations
+namespace CashWatch.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221222032519_TransactionDB")]
-    partial class TransactionDB
+    [Migration("20230115142322_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
