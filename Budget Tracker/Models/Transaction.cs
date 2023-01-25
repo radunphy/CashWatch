@@ -10,9 +10,9 @@ namespace CashWatch.Models
 
         // CategoryId
         [Display(Name = "Category")]
-        public int CategoryId { get; set; }
+        public int CategoryID { get; set; }
 
-        [ForeignKey(nameof(CategoryId))]
+        [ForeignKey(nameof(CategoryID))]
         public Category? Category { get; set; }
 
         [Column(TypeName = "int")]
@@ -20,8 +20,9 @@ namespace CashWatch.Models
 
         [Column(TypeName = "nvarchar(75)")]
         public string? Note { get; set; }
-        [Column(TypeName = "int")]
-        public DateTime Date { get; set; } = DateTime.Now;
+        
+        [Column(TypeName = "date")]
+        public DateTime Date { get; set; } = DateTime.Now;    
 
     }
 }

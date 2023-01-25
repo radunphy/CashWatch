@@ -1,6 +1,11 @@
-﻿using CashWatch.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using CashWatch.Models;
 
 namespace CashWatch.Controllers
 {
@@ -13,14 +18,14 @@ namespace CashWatch.Controllers
             _context = context;
         }
 
-
-        // GET: TransactionController
+        // GET: Transaction
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Transactions.ToListAsync());
+            var applicationDbContext = _context.Transactions.Include(t => t.Category);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: TransactionController/Details/5
+        // GET: Transaction/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Transactions == null)
@@ -29,7 +34,8 @@ namespace CashWatch.Controllers
             }
 
             var transaction = await _context.Transactions
-                .FirstOrDefaultAsync(tran => tran.TransactionID == id);
+                .Include(t => t.Category)
+                .FirstOrDefaultAsync(m => m.TransactionID == id);
             if (transaction == null)
             {
                 return NotFound();
@@ -38,33 +44,32 @@ namespace CashWatch.Controllers
             return View(transaction);
         }
 
-        // GET: TransactionController/Create
+        // GET: Transaction/Create
         public IActionResult Create()
         {
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "Title");
             return View();
         }
 
-        // POST: TransactionController/Create
+        // POST: Transaction/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind (
-            "TransactionID, " +
-            "CategoryID, " +
-            "Amount, " +
-            "Note, " +
-            "Date")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("TransactionID,CategoryID,Amount,Note,Date")] Transaction transaction)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(transaction);
+                transaction.Date = transaction.Date.Date;
+                _context.Add(transaction);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            
-            _context.Add(transaction);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));      
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "Title", transaction.CategoryID);
+            return View(transaction);
         }
 
-        // GET: TransactionController/Edit/5
+        // GET: Transaction/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Transactions == null)
@@ -77,20 +82,16 @@ namespace CashWatch.Controllers
             {
                 return NotFound();
             }
-            
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryID", transaction.CategoryID);
             return View(transaction);
         }
 
-        // POST: TransactionController/Edit/5
+        // POST: Transaction/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind (
-            "TransactionID, " +
-            "CategoryID, " +
-            "Category, " +
-            "Amount, " +
-            "Note, " +
-            "Date")] Transaction transaction)
+        public async Task<IActionResult> Edit(int id, [Bind("TransactionID,CategoryID,Amount,Note,Date")] Transaction transaction)
         {
             if (id != transaction.TransactionID)
             {
@@ -117,18 +118,20 @@ namespace CashWatch.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryID", transaction.CategoryID);
             return View(transaction);
         }
 
-        // GET: TransactionController/Delete/5
+        // GET: Transaction/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if(id == null || _context.Transactions == null)
+            if (id == null || _context.Transactions == null)
             {
                 return NotFound();
             }
 
             var transaction = await _context.Transactions
+                .Include(t => t.Category)
                 .FirstOrDefaultAsync(m => m.TransactionID == id);
             if (transaction == null)
             {
@@ -138,14 +141,14 @@ namespace CashWatch.Controllers
             return View(transaction);
         }
 
-        // POST: TransactionController/Delete/5
-        [HttpPost]
+        // POST: Transaction/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Transactions == null)
             {
-                return Problem("Entity set 'ApplicationDbContext' is null.");
+                return Problem("Entity set 'ApplicationDbContext.Transactions'  is null.");
             }
             var transaction = await _context.Transactions.FindAsync(id);
             if (transaction != null)
@@ -159,7 +162,7 @@ namespace CashWatch.Controllers
 
         private bool TransactionExists(int id)
         {
-            return _context.Transactions.Any(e => e.TransactionID == id);
+          return _context.Transactions.Any(e => e.TransactionID == id);
         }
     }
 }
